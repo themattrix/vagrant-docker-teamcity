@@ -1,0 +1,7 @@
+FROM mattrix/teamcity-agent-depends
+
+# Expose the default TeamCity Agent port
+EXPOSE 9090
+
+# Ensure the hostname can be resolved and start the TeamCity Agent
+ENTRYPOINT /usr/local/TeamCity/buildAgent/bin/agent.sh start

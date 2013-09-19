@@ -1,4 +1,0 @@
-FROM mattrix/teamcity-server-downloaded
-
-# TODO: Install the 32-bit JRE instead of the 64-bit JRE: http://goo.gl/lqs7I3
-RUN apt-get install -y default-jre

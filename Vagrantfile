@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
     if INITIAL_RUN.nil?
         config.vm.provision "puppet"
         config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
-        config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-server.sh"
+        config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-tc.sh"
     end
 
     config.vm.provider :aws do |aws, override|
@@ -77,6 +77,7 @@ Vagrant.configure("2") do |config|
     config.vm.provider :virtualbox do |vb|
         config.vm.box = BOX_NAME
         config.vm.box_url = BOX_URI
+        vb.customize ["modifyvm", :id, "--memory", "1024"]
     end
 
     # Forward TeamCity Server port

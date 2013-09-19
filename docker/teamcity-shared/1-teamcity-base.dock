@@ -1,4 +1,4 @@
-FROM ubuntu
+FROM ubuntu:latest
 
 ENV TEAM_CITY_BASE_URL http://download-ln.jetbrains.com/teamcity                 
 ENV TEAM_CITY_PACKAGE TeamCity-8.0.3.tar.gz
