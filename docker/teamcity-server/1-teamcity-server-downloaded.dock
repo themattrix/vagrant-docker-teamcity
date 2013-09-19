@@ -8,7 +8,7 @@ ENV TEAM_CITY_INSTALL_DIR /usr/local
 RUN apt-get install -y wget
 
 # Download archive
-RUN wget -P /tmp/ $TEAM_CITY_BASE_URL/$TEAM_CITY_PACKAGE
+RUN wget -q -P /tmp/ $TEAM_CITY_BASE_URL/$TEAM_CITY_PACKAGE
 
 # Unpack archive
 RUN tar xfz /tmp/$TEAM_CITY_PACKAGE -C $TEAM_CITY_INSTALL_DIR
