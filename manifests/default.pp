@@ -9,3 +9,7 @@ package { 'git':
 package { 'socat':
     ensure => installed,
 }
+
+package { 'tmux':
+    ensure => installed,
+}

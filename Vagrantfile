@@ -7,8 +7,9 @@ VF_BOX_URI = ENV['BOX_URI'] || "http://files.vagrantup.com/precise64_vmware_fusi
 AWS_REGION = ENV['AWS_REGION'] || "us-east-1"
 AWS_AMI    = ENV['AWS_AMI']    || "ami-d0f89fb9"
 FORWARD_DOCKER_PORTS = ENV['FORWARD_DOCKER_PORTS']
+INITIAL_RUN = ENV['INITIAL_RUN']
 
-Vagrant::Config.run do |config|
+Vagrant.configure("2") do |config|
     # Setup virtual machine box. This VM configuration code is always executed.
     config.vm.box = BOX_NAME
     config.vm.box_url = BOX_URI
@@ -33,26 +34,24 @@ Vagrant::Config.run do |config|
                 "echo yes | /mnt/VBoxLinuxAdditions.run\numount /mnt\n" \
                 "rm /root/guest_additions.sh; ' > /root/guest_additions.sh; " \
                 "chmod 700 /root/guest_additions.sh; " \
-                "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local; " \
-                "echo 'Installation of VBox Guest Additions is proceeding in the background.'; " \
-                "echo '\"vagrant reload\" can be used in about 2 minutes to activate the new guest additions.'; "
+                "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local; "
+            # Wait for the VirtualBox Guest Additions to be installed
+            pkg_cmd << "echo 'Waiting for VBox Guest Additions to install...'; " \
+                "echo    '   Initial sleep...; sleep 10; " \
+                "echo -n '   Polling.........'; while ps ax | grep -sq [V]BoxGuestAdditions; do sleep 1; echo -n .; done; " \
+                "echo    '   Cleanup sleep...'; sleep 5; "
         end
         # Activate new kernel
         pkg_cmd << "shutdown -r +1; "
         config.vm.provision :shell, :inline => pkg_cmd
     end
 
-    # NOTE: My additions
-    config.vm.provision "puppet"
+    if INITIAL_RUN.nil?
+        config.vm.provision "puppet"
+        config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
+        config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-server.sh"
+    end
 
-    # NOTE: My additions
-    config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
-    config.vm.provision :shell, :inline => "/home/vagrant/docker/start-server.sh"
-end
-
-
-# Providers were added on Vagrant >= 1.1.0
-Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
     config.vm.provider :aws do |aws, override|
         aws.access_key_id = ENV["AWS_ACCESS_KEY_ID"]
         aws.secret_access_key = ENV["AWS_SECRET_ACCESS_KEY"]
@@ -70,7 +69,7 @@ Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
         rs.api_key  = ENV["RS_API_KEY"]
         rs.public_key_path = ENV["RS_PUBLIC_KEY"]
         rs.flavor   = /512MB/
-            rs.image    = /Ubuntu/
+        rs.image    = /Ubuntu/
     end
 
     config.vm.provider :vmware_fusion do |f, override|
@@ -84,28 +83,7 @@ Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
         config.vm.box = BOX_NAME
         config.vm.box_url = BOX_URI
     end
-end
 
-if !FORWARD_DOCKER_PORTS.nil?
-    Vagrant::VERSION < "1.1.0" and Vagrant::Config.run do |config|
-        (49000..49900).each do |port|
-            config.vm.forward_port port, port
-        end
-    end
-
-    Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
-        (49000..49900).each do |port|
-            config.vm.network :forwarded_port, :host => port, :guest => port
-        end
-    end
-end
-
-# NOTE: My additions
-# Forward TeamCity Server port
-Vagrant::VERSION < "1.1.0" and Vagrant::Config.run do |config|
-    config.vm.forward_port 8111, 50384
-end
-
-Vagrant::VERSION >= "1.1.0" and Vagrant.configure("2") do |config|
+    # Forward TeamCity Server port
     config.vm.network :forwarded_port, :host => 8111, :guest => 50384
 end
