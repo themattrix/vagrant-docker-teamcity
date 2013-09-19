@@ -37,7 +37,7 @@ Vagrant.configure("2") do |config|
                 "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local; "
             # Wait for the VirtualBox Guest Additions to be installed
             pkg_cmd << "echo 'Waiting for VBox Guest Additions to install...'; " \
-                "echo    '   Initial sleep...; sleep 10; " \
+                "echo    '   Initial sleep...'; sleep 10; " \
                 "echo -n '   Polling.........'; while ps ax | grep -sq [V]BoxGuestAdditions; do sleep 1; echo -n .; done; " \
                 "echo    '   Cleanup sleep...'; sleep 5; "
         end
