@@ -15,9 +15,6 @@ docker_host_ip=$(docker__get_host_ip)
 source start-server.impl.sh
 docker_host_tc_server=$(docker__get_port 8111)
 
-echo $VAGRANT_TC_SERVER_LISTEN
-echo $docker_host_tc_server
-
 # TODO
 #source start-agent.impl.sh
 #docker_host_tc_agent=$(docker__get_port 9090)

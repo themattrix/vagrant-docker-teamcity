@@ -14,4 +14,5 @@ docker__build_if_necessary \
     mattrix/teamcity-server \
     teamcity-agent/2-teamcity-agent.dock || exit 1
 
+# TODO: will eventually need to run in privileged mode
 docker run mattrix/teamcity-agent & disown

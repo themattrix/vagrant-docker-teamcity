@@ -30,7 +30,7 @@ function docker__get_port() {
     echo $docker_port
 }
 
-function docker__host_ip() {
+function docker__get_host_ip() {
     ip -f inet addr show docker0 | sed -r -n -e '/inet/{s@.*inet ([0-9.]+)/.*@\1@p}'
 }
 
