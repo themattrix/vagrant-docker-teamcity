@@ -44,7 +44,7 @@ Vagrant.configure("2") do |config|
     if INITIAL_RUN.nil?
         config.vm.provision "puppet"
         config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
-        config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-tc.sh"
+        config.vm.provision :shell, :inline => "bash -x /home/vagrant/docker/start-tc.sh"
     end
 
     config.vm.provider :aws do |aws, override|

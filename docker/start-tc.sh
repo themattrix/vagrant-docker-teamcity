@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Change directory to the one this script is in
-cd "$(dirname "$(which "$0")")"
+cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 # Include the necessary libraries
-sudo bash start-tc.impl.sh
+sudo bash "start-tc.impl.sh"

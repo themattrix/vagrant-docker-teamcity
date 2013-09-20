@@ -40,4 +40,4 @@ echo "####################################################################"
 echo
 
 # Reboot a final time (without any special flags this time) and run normal provisioning
-vagrant reload
+vagrant reload --provision
