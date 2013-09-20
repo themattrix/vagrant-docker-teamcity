@@ -1,7 +1,7 @@
 FROM mattrix/teamcity-server-depends
 
 # Expose the default TeamCity Server port
-EXPOSE 8111
+EXPOSE 8111:8111
 
-# Ensure the hostname can be resolved and start the TeamCity Server
+# Start the TeamCity Server
 ENTRYPOINT /usr/local/TeamCity/bin/teamcity-server.sh run

@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 
 # Change directory to the one this script is in
 cd "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"

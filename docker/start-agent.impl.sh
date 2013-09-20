@@ -1,18 +1,30 @@
-#!/bin/bash
+#!/bin/bash -x
 
 source docker.lib.sh
 
 docker__build_if_necessary \
     mattrix/teamcity-base \
-    teamcity-shared/1-teamcity-base.dock || exit 1
+    teamcity-shared/1-teamcity-base/Dockerfile || exit 1
 
 docker__build_if_necessary \
-    mattrix/teamcity-server-depends \
-    teamcity-agent/1-teamcity-agent-depends.dock || exit 1
+    mattrix/teamcity-agent-dind \
+    teamcity-agent/1-teamcity-agent-dind/Dockerfile || exit 1
 
 docker__build_if_necessary \
-    mattrix/teamcity-server \
-    teamcity-agent/2-teamcity-agent.dock || exit 1
+    mattrix/teamcity-agent-depends \
+    teamcity-agent/2-teamcity-agent-depends/Dockerfile || exit 1
+
+docker__build_if_necessary \
+    mattrix/teamcity-agent \
+    teamcity-agent/3-teamcity-agent/Dockerfile || exit 1
+
+docker_host_ip=$1
+docker_host_tc_server=$2
+docker_host_tc_agent=$3
 
 # TODO: will eventually need to run in privileged mode
-docker run mattrix/teamcity-agent & disown
+docker run -privileged mattrix/teamcity-agent \
+    "${docker_host_ip}" \
+    "${docker_host_tc_server}" \
+    "${docker_host_tc_agent}" \
+    & disown
