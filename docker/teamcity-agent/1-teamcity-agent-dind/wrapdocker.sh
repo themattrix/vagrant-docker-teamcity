@@ -44,15 +44,4 @@ do
 done
 popd
 
-exit 0
-
-# If we were given a PORT environment variable, start as a simple daemon;
-# otherwise, spawn a shell as well
-#if [ "$PORT" ]
-#then
-#	exec docker -d -H 0.0.0.0:$PORT
-#else
-#
-#	docker -d &
-#	exec bash
-#fi
+docker -d & disown
