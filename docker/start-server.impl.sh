@@ -14,4 +14,4 @@ docker__build_if_necessary \
     mattrix/teamcity-server \
     teamcity-server/2-teamcity-server/Dockerfile || exit 1
 
-docker run mattrix/teamcity-server & disown
+docker run -d mattrix/teamcity-server
