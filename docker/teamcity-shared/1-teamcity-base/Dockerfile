@@ -5,10 +5,10 @@ ENV TEAM_CITY_PACKAGE TeamCity-8.0.3.tar.gz
 ENV TEAM_CITY_INSTALL_DIR /usr/local
 
 # Update package listing
-RUN apt-get update
+RUN apt-get update -qq
 
 # Install wget to download TeamCity Server archive
-RUN apt-get install -y wget
+RUN apt-get install -qqy wget
 
 # Download archive
 RUN wget -q -P /tmp/ $TEAM_CITY_BASE_URL/$TEAM_CITY_PACKAGE

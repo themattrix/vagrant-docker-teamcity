@@ -1,3 +1,3 @@
 FROM mattrix/teamcity-base
 
-RUN apt-get install -y default-jre
+RUN apt-get install -qqy default-jre

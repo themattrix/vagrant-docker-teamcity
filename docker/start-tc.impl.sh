@@ -9,7 +9,7 @@
 
 source docker.lib.sh
 
-bash start-server.impl.sh
+bash start-server.impl.sh || exit 1
 
 docker_host_ip=$(docker__get_host_ip)
 docker_host_tc_server=8111
