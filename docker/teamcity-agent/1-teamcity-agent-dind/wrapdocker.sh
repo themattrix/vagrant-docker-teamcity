@@ -1,5 +1,7 @@
 #!/bin/bash
 
+# From: https://github.com/jpetazzo/dind
+
 # First, make sure that cgroups are mounted correctly.
 CGROUP=/sys/fs/cgroup
 

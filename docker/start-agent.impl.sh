@@ -24,9 +24,7 @@ docker_host_ip=$1
 docker_host_tc_server=$2
 docker_host_tc_agent=$3
 
-# Use the Google DNS as a workaround to this issue:
-# https://github.com/dotcloud/docker/issues/1502
-docker run -d -privileged -dns 8.8.8.8 mattrix/teamcity-agent \
+docker run -d -privileged mattrix/teamcity-agent \
     "${docker_host_ip}" \
     "${docker_host_tc_server}" \
     "${docker_host_tc_agent}"
