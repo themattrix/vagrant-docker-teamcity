@@ -46,4 +46,11 @@ do
 done
 popd
 
+# Before starting docker, create a fixed docker0 interface:
+# https://github.com/jpetazzo/dind/issues/4#issuecomment-25105917
+ip link add docker0 type bridge
+ip link set docker0 up
+ip addr add 172.18.0.1/16 dev docker0
+
+# Start the docker daemon
 docker -d & disown
