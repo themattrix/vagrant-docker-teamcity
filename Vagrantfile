@@ -14,39 +14,50 @@ Vagrant.configure("2") do |config|
     config.vm.box = BOX_NAME
     config.vm.box_url = BOX_URI
 
-    # Provision docker and new kernel if deployment was not done.
-    # It is assumed Vagrant can successfully launch the provider instance.
-    if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*/id").empty?
-        # Add lxc-docker package
-        pkg_cmd = "wget -q -O - https://get.docker.io/gpg | apt-key add -;" \
-            "echo deb http://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list;" \
-            "apt-get update -qq; apt-get install -q -y --force-yes lxc-docker; "
-        # Add Ubuntu raring backported kernel
-        pkg_cmd << "apt-get update -qq; apt-get install -q -y linux-image-generic-lts-raring; "
-        # Add guest additions if local vbox VM. As virtualbox is the default provider,
-        # it is assumed it won't be explicitly stated.
-        if ENV["VAGRANT_DEFAULT_PROVIDER"].nil? && ARGV.none? { |arg| arg.downcase.start_with?("--provider") }
-            pkg_cmd << "apt-get install -q -y linux-headers-generic-lts-raring dkms; " \
-                "echo 'Downloading VBox Guest Additions...'; " \
-                "wget -q http://dlc.sun.com.edgesuite.net/virtualbox/4.2.18/VBoxGuestAdditions_4.2.18.iso; "
-            # Prepare the VM to add guest additions after reboot
-            pkg_cmd << "echo -e 'mount -o loop,ro /home/vagrant/VBoxGuestAdditions_4.2.18.iso /mnt\n" \
-                "echo yes | /mnt/VBoxLinuxAdditions.run\numount /mnt\n" \
-                "rm /root/guest_additions.sh; ' > /root/guest_additions.sh; " \
-                "chmod 700 /root/guest_additions.sh; " \
-                "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local; "
+    if !INITIAL_RUN.nil?
+        config.vm.provision "puppet" do |puppet|
+            puppet.manifest_file = "initial_run.pp"
         end
-        # Activate new kernel
-        pkg_cmd << "shutdown -r +1; "
-        config.vm.provision :shell, :inline => pkg_cmd
-    end
-
-    if INITIAL_RUN.nil?
+    else
         config.vm.provision "puppet"
         config.vm.provision :shell, :inline => "rm -rf /home/vagrant/docker"
         config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
         config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-tc.sh"
     end
+
+#    # Provision docker and new kernel if deployment was not done.
+#    # It is assumed Vagrant can successfully launch the provider instance.
+#    if Dir.glob("#{File.dirname(__FILE__)}/.vagrant/machines/default/*/id").empty?
+#        # Add lxc-docker package
+#        pkg_cmd = "wget -q -O - https://get.docker.io/gpg | apt-key add -;" \
+#            "echo deb http://get.docker.io/ubuntu docker main > /etc/apt/sources.list.d/docker.list;" \
+#            "apt-get update -qq; apt-get install -q -y --force-yes lxc-docker; "
+#        # Add Ubuntu raring backported kernel
+#        pkg_cmd << "apt-get update -qq; apt-get install -q -y linux-image-generic-lts-raring; "
+#        # Add guest additions if local vbox VM. As virtualbox is the default provider,
+#        # it is assumed it won't be explicitly stated.
+#        if ENV["VAGRANT_DEFAULT_PROVIDER"].nil? && ARGV.none? { |arg| arg.downcase.start_with?("--provider") }
+#            pkg_cmd << "apt-get install -q -y linux-headers-generic-lts-raring dkms; " \
+#                "echo 'Downloading VBox Guest Additions...'; " \
+#                "wget -q http://dlc.sun.com.edgesuite.net/virtualbox/4.2.18/VBoxGuestAdditions_4.2.18.iso; "
+#            # Prepare the VM to add guest additions after reboot
+#            pkg_cmd << "echo -e 'mount -o loop,ro /home/vagrant/VBoxGuestAdditions_4.2.18.iso /mnt\n" \
+#                "echo yes | /mnt/VBoxLinuxAdditions.run\numount /mnt\n" \
+#                "rm /root/guest_additions.sh; ' > /root/guest_additions.sh; " \
+#                "chmod 700 /root/guest_additions.sh; " \
+#                "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local; "
+#        end
+#        # Activate new kernel
+#        pkg_cmd << "shutdown -r +1; "
+#        config.vm.provision :shell, :inline => pkg_cmd
+#    end
+#
+#    if INITIAL_RUN.nil?
+#        config.vm.provision "puppet"
+#        config.vm.provision :shell, :inline => "rm -rf /home/vagrant/docker"
+#        config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
+#        config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-tc.sh"
+#    end
 
     config.vm.provider :aws do |aws, override|
         aws.access_key_id = ENV["AWS_ACCESS_KEY_ID"]
