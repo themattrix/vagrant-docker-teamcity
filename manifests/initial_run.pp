@@ -43,3 +43,32 @@ package { 'linux-image-generic-lts-raring':
 #                "chmod 700 /root/guest_additions.sh; " \
 #                "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local; "
 #        end
+
+package { 'linux-headers-generic-lts-raring':
+    ensure => installed,
+}
+
+package { 'dkms':
+    ensure => installed,
+}
+
+$vbox_version = "4.2.18"
+
+exec { 'dl-vbox-guest-additions':
+    path    => ['/usr/bin'],
+    command => "wget -o /root/VBoxGuestAdditions_${vbox_version}.iso http://dlc.sun.com.edgesuite.net/virtualbox/${vbox_version}/VBoxGuestAdditions_${vbox_version}.iso",
+}
+
+file { '/root/guest_additions.sh':
+    ensure  => file,
+    mode    => '700',
+    content => "
+        mount -o loop,ro /home/vagrant/VBoxGuestAdditions_${vbox_version}.iso /mnt
+        echo yes | /mnt/VBoxLinuxAdditions.run
+        umount /mnt
+        rm /root/guest_additions.sh",
+}
+
+exec { '//':
+    command => "sed -i -E 's#^exit 0#[ -x /root/guest_additions.sh ] \\&\\& /root/guest_additions.sh#' /etc/rc.local",
+}
