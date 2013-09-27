@@ -3,3 +3,4 @@
 
 # Convert shell scripts to \n line endings on checkout.
 *.sh text eol=lf
+*.pp text eol=lf
