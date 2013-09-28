@@ -47,18 +47,18 @@ $vbox_guest_additions_iso = "VBoxGuestAdditions_${vbox_version}.iso"
 $vbox_guest_additions_src = "http://dlc.sun.com.edgesuite.net/virtualbox/${vbox_version}/${vbox_guest_additions_iso}"
 $vbox_guest_additions_dst = "/root/${vbox_guest_additions_iso}"
 
-#exec { 'dl-vbox-guest-additions':
-#    path    => ['/usr/bin'],
-#    command => "wget -O ${vbox_guest_additions_dst} ${vbox_guest_additions_src}",
-#    creates => "${vbox_guest_additions_dst}",
-#    timeout => 1800,
-#}
-
-file { 'dl-vbox-guest-additions':
-    ensure => file,
-    path   => "${vbox_guest_additions_dst}",
-    source => "/vagrant/${vbox_guest_additions_iso}",
+exec { 'dl-vbox-guest-additions':
+    path    => ['/usr/bin'],
+    command => "wget -O ${vbox_guest_additions_dst} ${vbox_guest_additions_src}",
+    creates => "${vbox_guest_additions_dst}",
+    timeout => 1800,
 }
+
+#file { 'dl-vbox-guest-additions':
+#    ensure => file,
+#    path   => "${vbox_guest_additions_dst}",
+#    source => "/vagrant/${vbox_guest_additions_iso}",
+#}
 
 file { '/root/guest_additions.sh':
     ensure  => file,
@@ -79,7 +79,7 @@ exec { 'restart':
     command     => "shutdown -r now",
     refreshonly => true,
     require     => [
-        File['dl-vbox-guest-additions'],
+        Exec['dl-vbox-guest-additions'],
         File['/root/guest_additions.sh'],
         Exec['queue-vbox-guest-additions']]
 }
