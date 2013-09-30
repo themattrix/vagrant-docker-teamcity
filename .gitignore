@@ -1,2 +1,5 @@
 # Ignore Vagrant images
 .vagrant
+
+# Ignore TeamCity data
+.data
