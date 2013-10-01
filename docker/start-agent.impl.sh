@@ -29,6 +29,9 @@ readonly HOST_DATA_DIR="${HOST_BASE_DIR}${CONT_DATA_DIR}"
 readonly CONT_WORK_DIR="/usr/local/TeamCity/buildAgent/work"
 readonly HOST_WORK_DIR="${HOST_BASE_DIR}${CONT_WORK_DIR}"
 
+readonly CONT_CONF_DIR="/usr/local/TeamCity/buildAgent/conf/persist"
+readonly HOST_CONF_DIR="${HOST_BASE_DIR}${CONT_CONF_DIR}"
+
 readonly CONT_SSH_DIR="/root/.ssh"
 readonly HOST_SSH_DIR="${HOST_SHARE_DIR}${CONT_SSH_DIR}"
 

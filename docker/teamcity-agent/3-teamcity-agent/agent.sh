@@ -6,6 +6,7 @@
 bash -x /usr/local/bin/wrapdocker.sh
 
 agent_config=$TEAM_CITY_INSTALL_DIR/TeamCity/buildAgent/conf/buildAgent.properties
+agent_token=$TEAM_CITY_INSTALL_DIR/TeamCity/buildAgent/conf/persist/agentId
 
 docker_host_ip="$1"
 docker_host_tc_server="$2"
@@ -15,10 +16,14 @@ server_url="http://${docker_host_ip}:${docker_host_tc_server}"
 own_address="${docker_host_ip}"
 own_port="${docker_host_tc_agent}"
 
+# TODO: What copies the auth token into the agent_token file in the first place?
+[ -r "$agent_token" ] && auth_token=$(cat "$agent_id") || auth_token=
+
 sed -r -i.bak \
     -e "s@^#?(serverUrl=).*@\1${server_url}@g" \
     -e "s@^#?(ownAddress=).*@\1${own_address}@g" \
     -e "s@^#?(ownPort=).*@\1${own_port}@g" \
+    -e "s@^#?(authorizationToken=).*@\1${auth_token}@g" \
     "$agent_config"
 
 $TEAM_CITY_INSTALL_DIR/TeamCity/buildAgent/bin/agent.sh run
