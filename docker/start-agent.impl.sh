@@ -39,6 +39,7 @@ readonly HOST_SSH_DIR="${HOST_SHARE_DIR}${CONT_SSH_DIR}"
 [ -d "$HOST_DATA_DIR" ] || mkdir -p "$HOST_DATA_DIR"
 [ -d "$HOST_WORK_DIR" ] || mkdir -p "$HOST_WORK_DIR"
 [ -d "$HOST_SSH_DIR"  ] || mkdir -p "$HOST_SSH_DIR"
+[ -d "$HOST_CONF_DIR" ] || mkdir -p "$HOST_CONF_DIR"
 
 docker_host_ip=$1
 docker_host_tc_server=$2
@@ -48,6 +49,7 @@ docker run -d -privileged \
     -v $HOST_DATA_DIR:$CONT_DATA_DIR \
     -v $HOST_WORK_DIR:$CONT_WORK_DIR \
     -v $HOST_SSH_DIR:$CONT_SSH_DIR \
+    -v $HOST_CONF_DIR:$CONT_CONF_DIR \
     mattrix/teamcity-agent \
         "${docker_host_ip}" \
         "${docker_host_tc_server}" \
