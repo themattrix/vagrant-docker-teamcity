@@ -5,7 +5,7 @@ BOX_NAME = ENV['BOX_NAME'] || "ubuntu"
 BOX_URI = ENV['BOX_URI'] || "http://files.vagrantup.com/precise64.box"
 VF_BOX_URI = ENV['BOX_URI'] || "http://files.vagrantup.com/precise64_vmware_fusion.box"
 AWS_REGION = ENV['AWS_REGION'] || "us-east-1"
-AWS_AMI    = ENV['AWS_AMI']    || "ami-d0f89fb9"
+AWS_AMI    = ENV['AWS_AMI'] || "ami-d0f89fb9"
 FORWARD_DOCKER_PORTS = ENV['FORWARD_DOCKER_PORTS']
 INITIAL_RUN = ENV['INITIAL_RUN']
 
@@ -14,12 +14,11 @@ Vagrant.configure("2") do |config|
     config.vm.box = BOX_NAME
     config.vm.box_url = BOX_URI
 
-    if !INITIAL_RUN.nil?
-        config.vm.provision "puppet" do |puppet|
-            puppet.manifest_file = "initial_run.pp"
-        end
-    else
-        config.vm.provision "puppet"
+    config.vm.provision "puppet" do |puppet|
+        puppet.module_path = "modules"
+    end
+
+    if INITIAL_RUN.nil?
         config.vm.provision :shell, :inline => "rm -rf /home/vagrant/docker"
         config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
         config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-tc.sh"

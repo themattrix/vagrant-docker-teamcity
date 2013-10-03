@@ -1,6 +1,7 @@
 # Set default behaviour, in case users don't have core.autocrlf set.
 * text=auto
 
-# Convert shell scripts to \n line endings on checkout.
+# Convert text files to \n line endings on checkout.
 *.sh text eol=lf
 *.pp text eol=lf
+*.erb text eol=lf

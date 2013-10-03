@@ -13,7 +13,7 @@ echo "####################################################################"
 echo
 
 # Update kernel, download VBoxGuestAdditions, and reboot
-INITIAL_RUN=true vagrant up || exit 1
+INITIAL_RUN=true vagrant up --provision || exit 1
 
 echo
 echo "####################################################################"
