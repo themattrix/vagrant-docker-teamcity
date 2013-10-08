@@ -52,5 +52,9 @@ ip link add docker0 type bridge
 ip link set docker0 up
 ip addr add 172.18.0.1/16 dev docker0
 
+# Add a MASQUERADE NAT rule:
+# https://github.com/jpetazzo/dind/issues/4#issuecomment-25857295
+iptables -t nat -A POSTROUTING -j MASQUERADE
+
 # Start the docker daemon
 docker -d & disown
