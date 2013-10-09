@@ -13,8 +13,4 @@ class docker_prereq {
   package { "linux-image-generic-lts-raring":
     ensure => installed,
   }
-
-  if "${virtual}" == "virtualbox" {
-    include vbox_guest_additions
-  }
 }
