@@ -1,14 +1,7 @@
-FROM mattrix/teamcity-base
+FROM mattrix/teamcity-java
 
 # Heavily inspired from: https://github.com/jpetazzo/dind
 
-RUN echo deb http://archive.ubuntu.com/ubuntu precise universe > /etc/apt/sources.list.d/universe.list
-
-# Stops LXC from complaining that it cannot connect to Upstart per:
-# https://github.com/dotcloud/docker/issues/1024#issuecomment-20018600
-RUN dpkg-divert --local --rename --add /sbin/initctl && ln -s /bin/true /sbin/initctl
-
-RUN apt-get update -qq
 RUN apt-get install -qqy iptables ca-certificates lxc
 
 ADD docker /usr/local/bin/docker

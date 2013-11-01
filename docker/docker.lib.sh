@@ -7,7 +7,7 @@
 
 ### Public functions
 
-function docker__build_if_necessary() {
+function docker__build() {
     local tag=$1
     local dockerfile=$2
 

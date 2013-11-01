@@ -8,7 +8,7 @@ echo "##                                                                ##"
 echo "####################################################################"
 echo
 
-vagrant plugin install vagrant-vbguest || exit 1
+vagrant plugin install vagrant-vbguest || exit $?
 
 echo
 echo "####################################################################"
@@ -19,7 +19,7 @@ echo "####################################################################"
 echo
 
 # Update kernel, download VBoxGuestAdditions, and reboot
-INITIAL_RUN=true vagrant up --provision || exit 1
+INITIAL_RUN=true vagrant up --provision || exit $?
 
 echo
 echo "####################################################################"
