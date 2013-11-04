@@ -53,6 +53,8 @@ All of the critical TeamCity data is stored in `vagrant-docker-teamcity/.data`.
 This data is stored outside of the VM so that it persists even when the VM is
 destroyed.
 
+> Note that this relies on `/vagrant` being mounted external to the VM. This is the default case for the VirtualBox provider (so long as the VirtualBox Guest Additions are installed in the VM).
+
 
 Planned Future Improvements
 -------------------------------------------------------------------------------
