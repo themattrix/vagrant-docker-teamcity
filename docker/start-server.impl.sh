@@ -2,8 +2,8 @@
 
 source docker.lib.sh
 
-readonly HOST_BASE_DIR="/vagrant/.data/teamcity-server"
-readonly HOST_SHARE_DIR="/vagrant/.data/teamcity-shared"
+readonly HOST_BASE_DIR="/data/teamcity-server"
+readonly HOST_SHARE_DIR="/data/teamcity-shared"
 
 readonly CONT_DATA_DIR="/root/.BuildServer"
 readonly HOST_DATA_DIR="${HOST_BASE_DIR}${CONT_DATA_DIR}"
