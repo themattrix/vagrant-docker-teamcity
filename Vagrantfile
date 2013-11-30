@@ -18,8 +18,13 @@ Vagrant.configure("2") do |config|
     end
 
     if INITIAL_RUN.nil?
+        # Copy shared Vagrant files to the local filesystem
         config.vm.provision :shell, :inline => "rm -rf /home/vagrant/docker"
         config.vm.provision :shell, :inline => "cp -rf /vagrant/docker /home/vagrant/"
+        config.vm.provision :shell, :inline => "rm -rf /data"
+        config.vm.provision :shell, :inline => "cp -rf /vagrant/.data /data"
+        config.vm.provision :shell, :inline => "chown -R root:root /data"
+        # Start TeamCity
         config.vm.provision :shell, :inline => "bash /home/vagrant/docker/start-tc.sh"
     end
 

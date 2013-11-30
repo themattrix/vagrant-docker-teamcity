@@ -1,7 +1,7 @@
 #!/bin/bash -x
 
-readonly HOST_BASE_DIR="/vagrant/.data/teamcity-agent"
-readonly HOST_SHARE_DIR="/vagrant/.data/teamcity-shared"
+readonly HOST_BASE_DIR="/data/teamcity-agent"
+readonly HOST_SHARE_DIR="/data/teamcity-shared"
 readonly HOST_LOCAL_DIR="/root/.data"
 
 readonly CONT_DATA_DIR="/root/.BuildServer"
