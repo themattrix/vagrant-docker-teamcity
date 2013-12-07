@@ -15,24 +15,27 @@ readonly HOST_SSH_DIR="${HOST_SHARE_DIR}${CONT_SSH_DIR}"
 [ -d "$HOST_DATA_DIR" ] || mkdir -p "$HOST_DATA_DIR"
 [ -d "$HOST_SSH_DIR"  ] || mkdir -p "$HOST_SSH_DIR"
 
-if ! docker start teamcity-server 2> /dev/null
+if ! docker ps | grep -sq 'mattrix/teamcity-server:latest'
 then
-    docker__build \
-        mattrix/teamcity-base \
-        teamcity-shared/1-teamcity-base/Dockerfile || exit $?
+    if ! docker start teamcity-server 2> /dev/null
+    then
+        docker__build \
+            mattrix/teamcity-base \
+            teamcity-shared/1-teamcity-base/Dockerfile || exit $?
 
-    docker__build \
-        mattrix/teamcity-java \
-        teamcity-shared/2-teamcity-java/Dockerfile || exit $?
+        docker__build \
+            mattrix/teamcity-java \
+            teamcity-shared/2-teamcity-java/Dockerfile || exit $?
 
-    docker__build \
-        mattrix/teamcity-server \
-        teamcity-server/1-teamcity-server/Dockerfile || exit $?
+        docker__build \
+            mattrix/teamcity-server \
+            teamcity-server/1-teamcity-server/Dockerfile || exit $?
 
-    docker run -d \
-        -name teamcity-server \
-        -p 8111:8111 \
-        -v $HOST_DATA_DIR:$CONT_DATA_DIR \
-        -v $HOST_SSH_DIR:$CONT_SSH_DIR \
-        mattrix/teamcity-server
+        docker run -d \
+            -name teamcity-server \
+            -p 8111:8111 \
+            -v $HOST_DATA_DIR:$CONT_DATA_DIR \
+            -v $HOST_SSH_DIR:$CONT_SSH_DIR \
+            mattrix/teamcity-server
+    fi
 fi
