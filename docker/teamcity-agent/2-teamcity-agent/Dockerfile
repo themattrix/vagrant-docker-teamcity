@@ -4,10 +4,10 @@ FROM mattrix/teamcity-agent-dind
 EXPOSE 9090
 
 # Build configurations may require pushing to a remote repo
-RUN apt-get install -qqy git
+RUN apt-get install -y git
 
 # Add agent runner which sets its config before running
-ADD agent.sh $TEAM_CITY_INSTALL_DIR/TeamCity/bin/
+ADD agent.sh $TEAM_CITY_INSTALL_DIR/TeamCity/bin/agent.sh
 RUN chmod u+x $TEAM_CITY_INSTALL_DIR/TeamCity/bin/agent.sh
 
 # Ensure the hostname can be resolved and start the TeamCity Agent

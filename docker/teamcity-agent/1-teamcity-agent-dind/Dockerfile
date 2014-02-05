@@ -4,10 +4,10 @@ FROM mattrix/teamcity-java
 
 # Ensure that the latest version of LXC is used
 RUN add-apt-repository -y ppa:ubuntu-lxc/daily
-RUN apt-get update -qqy
+RUN apt-get update -y
 
 # Install docker dependencies
-RUN apt-get install -qqy iptables ca-certificates lxc
+RUN apt-get install -y iptables ca-certificates lxc
 
 # Install docker
 ADD docker /usr/local/bin/docker
