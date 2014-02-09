@@ -11,11 +11,8 @@ ENV TEAM_CITY_INSTALL_DIR /usr/local
 RUN apt-get update
 RUN apt-get upgrade -y
 
-# Download archive
-ADD $TEAM_CITY_BASE_URL/$TEAM_CITY_PACKAGE /tmp/$TEAM_CITY_PACKAGE
+# Install curl so that we can download TeamCity
+RUN apt-get install -y curl
 
-# Unpack archive
-RUN tar xfz /tmp/$TEAM_CITY_PACKAGE -C $TEAM_CITY_INSTALL_DIR
-
-# Deleted downloaded package
-RUN rm /tmp/$TEAM_CITY_PACKAGE
+# Download and unpack archive
+RUN curl $TEAM_CITY_BASE_URL/$TEAM_CITY_PACKAGE | tar xvz -C $TEAM_CITY_INSTALL_DIR
